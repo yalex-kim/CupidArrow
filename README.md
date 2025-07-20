@@ -1,69 +1,29 @@
-# React + TypeScript + Vite
+# 큐피드의 화살 피하기 게임
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- 화면 구성
 
-Currently, two official plugins are available:
+세로로 긴 화면( 핸드폰 화면 비율에 맞게)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+플레이어는 중앙 아래에서 시작한다. 
 
-## Expanding the ESLint configuration
+보유하고 있는 아이템의 개수와 사용을 위한 단축키, 그리고 목숨 수가 하늘 윗부분에 표시된다.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 게임 규칙
+1. 땅에서 사람이 사로 방향으로 움직이면서 큐피드의 화살을 피한다.
+2. 하늘에는 큐피드의 화살이 랜덤으로 땅 전체에 골고루 쏘아진다. 
+3. 플레이어의 목숨은 3개
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 아이템
+1. 방어막 : 3초간 화살을 막을 수 있음. 
+2. 스피드 부스터 : 이동속도를 향상시킴
+3. 처음 시작할 때 모든 아이템을 하나씩 가지고 있고, 사용하는 단축키가 화면에 설명되어 있다.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- 난이도
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1단계 : 화살이 랜덤하게 내려온다. 
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2단계 : 큐피드가 더 많은 화살을 쏜다
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+3단계 : 큐피드가 아래로 어지러워지는 아이템을 쏜다. 여기에 맞으면 화면이 울렁거리면서 그때 큐피드가 쏘는 화살에 맞으면 목숨이 2개 없어진다.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+4단계 : 느려지는 아이템이 내려와 여기에 맞으면 플레이의 이동속도가 30% 낮아진다. (아이템은 중첩 가능하다)
