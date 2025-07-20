@@ -888,7 +888,7 @@ const ArrowDodgeGame = () => {
                   width: player.x
                 }}
               >
-                <div style={{ color: 'white', fontSize: '3rem', opacity: 0.3 }}>←</div>
+                <div style={{ color: 'white', fontSize: '3rem', opacity: 0.3, userSelect: 'none', WebkitUserSelect: 'none' }}>←</div>
               </div>
               <div 
                 style={{
@@ -905,7 +905,7 @@ const ArrowDodgeGame = () => {
                   width: GAME_WIDTH - player.x
                 }}
               >
-                <div style={{ color: 'white', fontSize: '3rem', opacity: 0.3 }}>→</div>
+                <div style={{ color: 'white', fontSize: '3rem', opacity: 0.3, userSelect: 'none', WebkitUserSelect: 'none' }}>→</div>
               </div>
               
               {/* Player position indicator */}
@@ -958,7 +958,10 @@ const ArrowDodgeGame = () => {
                 '0 0 10px #60a5fa, 2px 2px 4px rgba(0,0,0,0.8)' : 
                 '2px 2px 4px rgba(0,0,0,0.8)',
               filter: items.speed.active ? 'drop-shadow(0 0 8px #60a5fa)' : 'none',
-              animation: items.speed.active ? 'pulse 1s infinite' : 'none'
+              animation: items.speed.active ? 'pulse 1s infinite' : 'none',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              pointerEvents: 'none'
             }}
           >
             {items.shield.active ? '🛡️' : items.speed.active ? '🚀' : '🏃'}
@@ -976,7 +979,10 @@ const ArrowDodgeGame = () => {
               top: arrow.y - ARROW_SIZE/2,
               fontSize: '20px',
               color: '#dc2626',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              pointerEvents: 'none'
             }}
           >
             🏹
@@ -994,7 +1000,10 @@ const ArrowDodgeGame = () => {
               top: item.y - 8,
               fontSize: '20px',
               color: '#7c3aed',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              pointerEvents: 'none'
             }}
           >
             😵‍💫
@@ -1012,7 +1021,10 @@ const ArrowDodgeGame = () => {
               top: item.y - 8,
               fontSize: '20px',
               color: '#1e40af',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              pointerEvents: 'none'
             }}
           >
             🐌
@@ -1031,7 +1043,10 @@ const ArrowDodgeGame = () => {
               fontSize: '30px',
               opacity: trail.opacity,
               color: '#60a5fa',
-              textShadow: '0 0 5px #60a5fa'
+              textShadow: '0 0 5px #60a5fa',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              pointerEvents: 'none'
             }}
           >
             ⭐
@@ -1055,7 +1070,9 @@ const ArrowDodgeGame = () => {
             <div style={{
               color: '#6b21a8',
               fontSize: '4rem',
-              animation: 'pulse 1s infinite'
+              animation: 'pulse 1s infinite',
+              userSelect: 'none',
+              WebkitUserSelect: 'none'
             }}>😵‍💫</div>
           </div>
         )}
@@ -1078,7 +1095,9 @@ const ArrowDodgeGame = () => {
             <div style={{
               color: '#1e40af',
               fontSize: '2rem',
-              animation: 'pulse 1s infinite'
+              animation: 'pulse 1s infinite',
+              userSelect: 'none',
+              WebkitUserSelect: 'none'
             }}>🚀 터보 모드!</div>
           </div>
         )}
@@ -1101,7 +1120,9 @@ const ArrowDodgeGame = () => {
             <div style={{
               color: '#1e40af',
               fontSize: '3rem',
-              animation: 'pulse 1s infinite'
+              animation: 'pulse 1s infinite',
+              userSelect: 'none',
+              WebkitUserSelect: 'none'
             }}>🐌 느려짐!</div>
           </div>
         )}
