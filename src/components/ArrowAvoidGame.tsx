@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const GAME_WIDTH = 320;
 const GAME_HEIGHT = 480;
@@ -25,9 +25,9 @@ const ArrowDodgeGame = () => {
     { name: "러브", score: 200, level: 1 }
   ]);
   const [player, setPlayer] = useState({ x: GAME_WIDTH / 2, y: GAME_HEIGHT - 60 });
-  const [arrows, setArrows] = useState([]);
-  const [confusionItems, setConfusionItems] = useState([]);
-  const [slowItems, setSlowItems] = useState([]);
+  const [arrows, setArrows] = useState<Array<{x: number, y: number, id: number}>>([]);
+  const [confusionItems, setConfusionItems] = useState<Array<{x: number, y: number, id: number}>>([]);
+  const [slowItems, setSlowItems] = useState<Array<{x: number, y: number, id: number}>>([]);
   const [isConfused, setIsConfused] = useState(false);
   const [confusionTime, setConfusionTime] = useState(0);
   const [isSlowed, setIsSlowed] = useState(false);
@@ -36,20 +36,24 @@ const ArrowDodgeGame = () => {
     left: false,
     right: false
   });
-  const [speedTrails, setSpeedTrails] = useState([]);
+  const [speedTrails, setSpeedTrails] = useState<Array<{x: number, y: number, id: number, opacity: number}>>([]);
   
   // Items
-  const [items, setItems] = useState({
+  type ItemType = 'shield' | 'speed';
+  const [items, setItems] = useState<{
+    shield: { count: number; active: boolean; time: number };
+    speed: { count: number; active: boolean; time: number };
+  }>({
     shield: { count: 1, active: false, time: 0 },
     speed: { count: 1, active: false, time: 0 }
   });
 
-  const gameLoopRef = useRef();
-  const keysRef = useRef({});
+  const gameLoopRef = useRef<number | null>(null);
+  const keysRef = useRef<{[key: string]: boolean}>({});
 
   // Key handling
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       keysRef.current[e.key.toLowerCase()] = true;
       
       // Item usage
@@ -62,7 +66,7 @@ const ArrowDodgeGame = () => {
       }
     };
 
-    const handleKeyUp = (e) => {
+    const handleKeyUp = (e: KeyboardEvent) => {
       keysRef.current[e.key.toLowerCase()] = false;
     };
 
@@ -75,7 +79,7 @@ const ArrowDodgeGame = () => {
     };
   }, [gameState, items]);
 
-  const useItem = (itemType) => {
+  const useItem = (itemType: ItemType) => {
     setItems(prev => ({
       ...prev,
       [itemType]: {
@@ -239,7 +243,7 @@ const ArrowDodgeGame = () => {
     // Update item timers
     setItems(prev => {
       const newItems = { ...prev };
-      Object.keys(newItems).forEach(key => {
+      (Object.keys(newItems) as ItemType[]).forEach(key => {
         if (newItems[key].active && newItems[key].time > 0) {
           newItems[key].time -= 16;
           if (newItems[key].time <= 0) {
@@ -295,7 +299,7 @@ const ArrowDodgeGame = () => {
     // Check confusion item collisions
     const checkConfusionCollision = () => {
       setConfusionItems(prev => {
-        const remainingItems = [];
+        const remainingItems: Array<{x: number, y: number, id: number}> = [];
         let confused = false;
 
         prev.forEach(item => {
@@ -323,7 +327,7 @@ const ArrowDodgeGame = () => {
     // Check slow item collisions
     const checkSlowCollision = () => {
       setSlowItems(prev => {
-        const remainingItems = [];
+        const remainingItems: Array<{x: number, y: number, id: number}> = [];
         let slowed = false;
 
         prev.forEach(item => {
@@ -356,13 +360,15 @@ const ArrowDodgeGame = () => {
     if (gameState === 'playing') {
       gameLoopRef.current = setInterval(gameLoop, 16);
     } else {
-      clearInterval(gameLoopRef.current);
+      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     }
 
-    return () => clearInterval(gameLoopRef.current);
+    return () => {
+      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+    };
   }, [gameLoop, gameState]);
 
-  const checkRanking = (finalScore) => {
+  const checkRanking = (finalScore: number) => {
     const lowestRankingScore = rankings.length >= 10 ? rankings[9].score : 0;
     if (finalScore > lowestRankingScore || rankings.length < 10) {
       setGameState('nameInput');
@@ -389,14 +395,14 @@ const ArrowDodgeGame = () => {
     setGameState('gameOver');
   };
 
-  const handleNameInputKeyPress = (e) => {
+  const handleNameInputKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       submitRanking();
     }
   };
 
   // Touch control handlers for screen touch
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: React.TouchEvent) => {
     if (gameState !== 'playing') return;
     
     e.preventDefault();
@@ -418,7 +424,7 @@ const ArrowDodgeGame = () => {
     }
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
     if (gameState !== 'playing') return;
     
     e.preventDefault();
@@ -428,7 +434,7 @@ const ArrowDodgeGame = () => {
     setTouchControls({ left: false, right: false });
   };
 
-  const handleItemUse = (itemType) => {
+  const handleItemUse = (itemType: ItemType) => {
     if (gameState !== 'playing') return;
     
     if (itemType === 'shield' && items.shield.count > 0 && !items.shield.active) {
@@ -649,7 +655,7 @@ const ArrowDodgeGame = () => {
             <input
               type="text"
               value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlayerName(e.target.value)}
               onKeyPress={handleNameInputKeyPress}
               style={{
                 width: '100%',
@@ -816,7 +822,7 @@ const ArrowDodgeGame = () => {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
-          onTouchMove={(e) => e.preventDefault()}
+          onTouchMove={(e: React.TouchEvent) => e.preventDefault()}
         >
           {/* UI */}
           <div style={{
