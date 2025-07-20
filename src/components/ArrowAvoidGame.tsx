@@ -832,7 +832,10 @@ const ArrowDodgeGame = () => {
             color: 'white',
             fontSize: '0.875rem',
             fontWeight: 'bold',
-            zIndex: 50
+            zIndex: 50,
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            pointerEvents: 'none'
           }}>
             <div>❤️ {lives}</div>
             <div>📊 {score}</div>
@@ -846,7 +849,10 @@ const ArrowDodgeGame = () => {
             right: '8px',
             color: 'white',
             fontSize: '0.75rem',
-            zIndex: 50
+            zIndex: 50,
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            pointerEvents: 'none'
           }}>
             <div style={{
               marginBottom: '4px',
@@ -926,7 +932,10 @@ const ArrowDodgeGame = () => {
                 zIndex: 50,
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 padding: '4px',
-                borderRadius: '4px'
+                borderRadius: '4px',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                pointerEvents: 'none'
               }}>
                 터치: {touchControls.left ? '←' : touchControls.right ? '→' : '없음'}<br/>
                 플레이어: {Math.round(player.x)}
