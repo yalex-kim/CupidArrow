@@ -567,7 +567,9 @@ const ArrowDodgeGame = () => {
             }}>🏆 TOP 10 랭킹</h3>
             <div style={{ 
               textAlign: 'left', 
-              fontSize: '0.75rem'
+              fontSize: '0.75rem',
+              maxHeight: '240px',
+              overflowY: 'auto'
             }}>
               {rankings.slice(0, 10).map((entry, index) => (
                 <div key={index} style={{
