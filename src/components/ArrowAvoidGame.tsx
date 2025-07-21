@@ -644,7 +644,7 @@ const ArrowDodgeGame = () => {
                 fontSize: '1rem'
               }}
             >
-              다시 도전하기
+              재도전
             </button>
             <button 
               onClick={() => setGameState('start')}
