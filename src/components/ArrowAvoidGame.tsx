@@ -618,13 +618,10 @@ const ArrowDodgeGame = () => {
             borderTop: '1px solid #e5e7eb', 
             paddingTop: '12px', 
             marginTop: '12px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            textAlign: 'center',
             marginBottom: '16px'
           }}>
-            <p style={{ fontSize: '1.125rem', fontWeight: '600', margin: 0 }}>점수: {finalScore}</p>
-            <p style={{ fontSize: '1rem', color: '#6b7280', margin: 0 }}>레벨: {level}</p>
+            <p style={{ fontSize: '1.25rem', fontWeight: '600', margin: 0, color: '#dc2626' }}>최종 점수: {finalScore}점</p>
           </div>
           
           <div>
