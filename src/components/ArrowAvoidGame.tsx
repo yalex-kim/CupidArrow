@@ -763,6 +763,7 @@ const ArrowDodgeGame = () => {
                 fontSize: '1.2rem',
                 fontWeight: '500',
                 backgroundColor: 'white',
+                color: '#374151',
                 boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
                 outline: 'none'
               }}
