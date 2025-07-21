@@ -581,9 +581,11 @@ const ArrowDodgeGame = () => {
                   borderRadius: '4px',
                   marginBottom: '4px',
                   backgroundColor: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
-                    ? '#fef3c7' : '#f9fafb',
+                    ? '#fef3c7' : 'white',
                   border: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
-                    ? '2px solid #fbbf24' : '1px solid #e5e7eb'
+                    ? '2px solid #fbbf24' : '1px solid #d1d5db',
+                  boxShadow: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
+                    ? '0 0 8px rgba(251, 191, 36, 0.3)' : 'none'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{
@@ -667,38 +669,77 @@ const ArrowDodgeGame = () => {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(to bottom, #fbbf24, #f59e0b)',
+        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #dc2626 100%)',
         padding: '16px'
       }}>
-        <h1 style={{
-          fontSize: '2.5rem',
-          fontWeight: 'bold',
-          color: '#dc2626',
-          marginBottom: '16px'
-        }}>🎉 랭킹 진입! 🎉</h1>
         <div style={{
-          backgroundColor: 'white',
-          padding: '24px',
-          borderRadius: '8px',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center',
+          marginBottom: '20px'
+        }}>
+          <div style={{
+            fontSize: '4rem',
+            marginBottom: '8px',
+            animation: 'pulse 2s infinite'
+          }}>🎉</div>
+          <h1 style={{
+            fontSize: '2.5rem',
+            fontWeight: 'bold',
+            color: 'white',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            marginBottom: '8px'
+          }}>랭킹 진입!</h1>
+          <p style={{
+            fontSize: '1.2rem',
+            color: 'white',
+            textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+          }}>TOP 5에 진입했습니다! ⭐</p>
+        </div>
+        
+        <div style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          padding: '32px',
+          borderRadius: '20px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15), 0 0 20px rgba(251, 191, 36, 0.3)',
           textAlign: 'center',
           maxWidth: '400px',
-          width: '100%'
+          width: '100%',
+          border: '3px solid rgba(251, 191, 36, 0.5)'
         }}>
-          <p style={{ fontSize: '1.5rem', marginBottom: '8px' }}>축하합니다!</p>
-          <p style={{ fontSize: '1.25rem', marginBottom: '8px' }}>점수: {finalScore}</p>
-          <p style={{ fontSize: '1.125rem', marginBottom: '16px' }}>레벨: {level}</p>
-          <p style={{ fontSize: '1.125rem', marginBottom: '16px' }}>TOP 5에 진입했습니다!</p>
+          <div style={{
+            backgroundColor: '#fef3c7',
+            padding: '16px',
+            borderRadius: '12px',
+            marginBottom: '24px',
+            border: '2px solid #fbbf24'
+          }}>
+            <div style={{ 
+              fontSize: '1.8rem', 
+              fontWeight: 'bold',
+              color: '#dc2626',
+              marginBottom: '8px'
+            }}>🏆 당신의 기록 🏆</div>
+            <div style={{ 
+              fontSize: '2rem', 
+              fontWeight: 'bold',
+              color: '#dc2626',
+              marginBottom: '4px'
+            }}>{finalScore}점</div>
+            <div style={{ 
+              fontSize: '1.2rem',
+              color: '#7c2d12'
+            }}>레벨 {level} 달성</div>
+          </div>
           
-          <div style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'block',
-              fontSize: '0.875rem',
-              fontWeight: '500',
+              fontSize: '1.1rem',
+              fontWeight: '600',
               color: '#374151',
-              marginBottom: '8px'
+              marginBottom: '12px',
+              textAlign: 'center'
             }}>
-              플레이어 이름을 입력하세요:
+              ✨ 플레이어 이름을 입력하세요 ✨
             </label>
             <input
               type="text"
@@ -707,11 +748,15 @@ const ArrowDodgeGame = () => {
               onKeyPress={handleNameInputKeyPress}
               style={{
                 width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #d1d5db',
-                borderRadius: '6px',
+                padding: '16px 20px',
+                border: '3px solid #fbbf24',
+                borderRadius: '12px',
                 textAlign: 'center',
-                fontSize: '1rem'
+                fontSize: '1.2rem',
+                fontWeight: '500',
+                backgroundColor: 'white',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
+                outline: 'none'
               }}
               placeholder="이름 입력 (최대 10글자)"
               maxLength={10}
@@ -723,17 +768,22 @@ const ArrowDodgeGame = () => {
             onClick={submitRanking}
             disabled={!playerName.trim()}
             style={{
-              backgroundColor: !playerName.trim() ? '#9ca3af' : '#dc2626',
+              backgroundColor: !playerName.trim() ? '#9ca3af' : 'linear-gradient(135deg, #dc2626, #b91c1c)',
+              background: !playerName.trim() ? '#9ca3af' : 'linear-gradient(135deg, #dc2626, #b91c1c)',
               color: 'white',
               fontWeight: 'bold',
-              padding: '12px 24px',
-              borderRadius: '8px',
+              padding: '16px 32px',
+              borderRadius: '12px',
               border: 'none',
               cursor: !playerName.trim() ? 'not-allowed' : 'pointer',
-              width: '100%'
+              width: '100%',
+              fontSize: '1.1rem',
+              boxShadow: !playerName.trim() ? 'none' : '0 4px 12px rgba(220, 38, 38, 0.3)',
+              transform: !playerName.trim() ? 'none' : 'translateY(-1px)',
+              transition: 'all 0.2s'
             }}
           >
-            랭킹 등록
+            🏆 랭킹에 등록하기 🏆
           </button>
         </div>
       </div>
