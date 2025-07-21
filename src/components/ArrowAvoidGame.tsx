@@ -568,7 +568,7 @@ const ArrowDodgeGame = () => {
             <div style={{ 
               textAlign: 'left', 
               fontSize: '0.75rem',
-              maxHeight: '240px',
+              maxHeight: '320px',
               overflowY: 'auto'
             }}>
               {rankings.slice(0, 10).map((entry, index) => (
@@ -624,22 +624,27 @@ const ArrowDodgeGame = () => {
             <p style={{ fontSize: '1.25rem', fontWeight: '600', margin: 0, color: '#dc2626' }}>최종 점수: {finalScore}점</p>
           </div>
           
-          <div>
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            flexWrap: 'wrap'
+          }}>
             <button 
               onClick={startGame}
               style={{
                 backgroundColor: '#dc2626',
                 color: 'white',
                 fontWeight: 'bold',
-                padding: '12px 24px',
-                borderRadius: '8px',
+                padding: '10px 16px',
+                borderRadius: '6px',
                 border: 'none',
                 cursor: 'pointer',
-                width: '100%',
-                marginBottom: '8px'
+                flex: '1',
+                minWidth: '90px',
+                fontSize: '0.875rem'
               }}
             >
-              다시 도전하기
+              다시 도전
             </button>
             <button 
               onClick={() => setGameState('start')}
@@ -647,12 +652,13 @@ const ArrowDodgeGame = () => {
                 backgroundColor: '#6b7280',
                 color: 'white',
                 fontWeight: 'bold',
-                padding: '12px 24px',
-                borderRadius: '8px',
+                padding: '10px 16px',
+                borderRadius: '6px',
                 border: 'none',
                 cursor: 'pointer',
-                width: '100%',
-                marginBottom: '8px'
+                flex: '1',
+                minWidth: '90px',
+                fontSize: '0.875rem'
               }}
             >
               메인 메뉴
@@ -663,11 +669,13 @@ const ArrowDodgeGame = () => {
                 backgroundColor: '#7c3aed',
                 color: 'white',
                 fontWeight: 'bold',
-                padding: '12px 24px',
-                borderRadius: '8px',
+                padding: '10px 16px',
+                borderRadius: '6px',
                 border: 'none',
                 cursor: 'pointer',
-                width: '100%'
+                flex: '1',
+                minWidth: '90px',
+                fontSize: '0.875rem'
               }}
             >
               랭킹 보기
