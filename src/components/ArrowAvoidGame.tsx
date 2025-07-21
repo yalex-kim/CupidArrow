@@ -599,8 +599,15 @@ const ArrowDodgeGame = () => {
                     <span style={{ fontWeight: '500', color: '#374151' }}>{entry.name}</span>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontWeight: 'bold', color: '#dc2626', fontSize: '0.7rem' }}>{entry.score}점</div>
-                    <div style={{ fontSize: '0.6rem', color: '#6b7280' }}>Lv.{entry.level}</div>
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'flex-end',
+                      gap: '6px'
+                    }}>
+                      <span style={{ fontWeight: 'bold', color: '#dc2626', fontSize: '0.7rem' }}>{entry.score}점</span>
+                      <span style={{ fontSize: '0.6rem', color: '#6b7280' }}>Lv.{entry.level}</span>
+                    </div>
                   </div>
                 </div>
               ))}
