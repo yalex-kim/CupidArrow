@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { saveRankingToNotion, getRankingsFromNotion, type RankingEntry } from '../services/notionService';
 
 const GAME_WIDTH = 320;
 const GAME_HEIGHT = 480;
@@ -12,7 +13,7 @@ const ArrowDodgeGame = () => {
   const [score, setScore] = useState(0);
   const [finalScore, setFinalScore] = useState(0);
   const [playerName, setPlayerName] = useState('');
-  const [rankings, setRankings] = useState([
+  const [rankings, setRankings] = useState<RankingEntry[]>([
     { name: "화살마스터", score: 2500, level: 4 },
     { name: "천사", score: 2000, level: 4 },
     { name: "하트", score: 1800, level: 4 },
@@ -24,6 +25,7 @@ const ArrowDodgeGame = () => {
     { name: "허니", score: 400, level: 1 },
     { name: "러브", score: 200, level: 1 }
   ]);
+  const [isLoadingRankings, setIsLoadingRankings] = useState(false);
   const [player, setPlayer] = useState({ x: GAME_WIDTH / 2, y: GAME_HEIGHT - 60 });
   const [arrows, setArrows] = useState<Array<{x: number, y: number, id: number}>>([]);
   const [confusionItems, setConfusionItems] = useState<Array<{x: number, y: number, id: number}>>([]);
@@ -50,6 +52,17 @@ const ArrowDodgeGame = () => {
 
   const gameLoopRef = useRef<number | null>(null);
   const keysRef = useRef<{[key: string]: boolean}>({});
+
+  useEffect(() => {
+    const loadRankings = async () => {
+      const notionRankings = await getRankingsFromNotion();
+      if (notionRankings.length > 0) {
+        setRankings(notionRankings);
+      }
+    };
+    
+    loadRankings();
+  }, []);
 
   // Key handling
   useEffect(() => {
@@ -377,20 +390,37 @@ const ArrowDodgeGame = () => {
     }
   };
 
-  const submitRanking = () => {
+  const submitRanking = async () => {
     if (!playerName.trim()) return;
     
-    const newEntry = {
+    const newEntry: RankingEntry = {
       name: playerName.trim(),
       score: finalScore,
       level: level
     };
     
-    const newRankings = [...rankings, newEntry]
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
+    setIsLoadingRankings(true);
     
-    setRankings(newRankings);
+    const success = await saveRankingToNotion(newEntry);
+    
+    if (success) {
+      const updatedRankings = await getRankingsFromNotion();
+      if (updatedRankings.length > 0) {
+        setRankings(updatedRankings);
+      } else {
+        const newRankings = [...rankings, newEntry]
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10);
+        setRankings(newRankings);
+      }
+    } else {
+      const newRankings = [...rankings, newEntry]
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      setRankings(newRankings);
+    }
+    
+    setIsLoadingRankings(false);
     setPlayerName('');
     setGameState('gameOver');
   };
@@ -512,19 +542,28 @@ const ArrowDodgeGame = () => {
             게임 시작
           </button>
           <button 
-            onClick={() => setGameState('gameOver')}
+            onClick={async () => {
+              setIsLoadingRankings(true);
+              const notionRankings = await getRankingsFromNotion();
+              if (notionRankings.length > 0) {
+                setRankings(notionRankings);
+              }
+              setIsLoadingRankings(false);
+              setGameState('gameOver');
+            }}
+            disabled={isLoadingRankings}
             style={{
               marginTop: '24px',
-              backgroundColor: '#7c3aed',
+              backgroundColor: isLoadingRankings ? '#9ca3af' : '#7c3aed',
               color: 'white',
               fontWeight: 'bold',
               padding: '12px 24px',
               borderRadius: '8px',
               border: 'none',
-              cursor: 'pointer'
+              cursor: isLoadingRankings ? 'not-allowed' : 'pointer'
             }}
           >
-            랭킹 보기
+            {isLoadingRankings ? '⏳ 로딩 중...' : '랭킹 보기'}
           </button>
         </div>
       </div>
@@ -775,24 +814,24 @@ const ArrowDodgeGame = () => {
           
           <button 
             onClick={submitRanking}
-            disabled={!playerName.trim()}
+            disabled={!playerName.trim() || isLoadingRankings}
             style={{
-              backgroundColor: !playerName.trim() ? '#9ca3af' : 'linear-gradient(135deg, #dc2626, #b91c1c)',
-              background: !playerName.trim() ? '#9ca3af' : 'linear-gradient(135deg, #dc2626, #b91c1c)',
+              backgroundColor: !playerName.trim() || isLoadingRankings ? '#9ca3af' : 'linear-gradient(135deg, #dc2626, #b91c1c)',
+              background: !playerName.trim() || isLoadingRankings ? '#9ca3af' : 'linear-gradient(135deg, #dc2626, #b91c1c)',
               color: 'white',
               fontWeight: 'bold',
               padding: '16px 32px',
               borderRadius: '12px',
               border: 'none',
-              cursor: !playerName.trim() ? 'not-allowed' : 'pointer',
+              cursor: !playerName.trim() || isLoadingRankings ? 'not-allowed' : 'pointer',
               width: '100%',
               fontSize: '1.1rem',
-              boxShadow: !playerName.trim() ? 'none' : '0 4px 12px rgba(220, 38, 38, 0.3)',
-              transform: !playerName.trim() ? 'none' : 'translateY(-1px)',
+              boxShadow: !playerName.trim() || isLoadingRankings ? 'none' : '0 4px 12px rgba(220, 38, 38, 0.3)',
+              transform: !playerName.trim() || isLoadingRankings ? 'none' : 'translateY(-1px)',
               transition: 'all 0.2s'
             }}
           >
-            🏆 랭킹에 등록하기 🏆
+            {isLoadingRankings ? '⏳ 등록 중...' : '🏆 랭킹에 등록하기 🏆'}
           </button>
         </div>
       </div>
