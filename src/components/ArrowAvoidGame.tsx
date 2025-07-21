@@ -369,8 +369,8 @@ const ArrowDodgeGame = () => {
   }, [gameLoop, gameState]);
 
   const checkRanking = (finalScore: number) => {
-    const lowestRankingScore = rankings.length >= 10 ? rankings[9].score : 0;
-    if (finalScore > lowestRankingScore || rankings.length < 10) {
+    const lowestRankingScore = rankings.length >= 5 ? rankings[4].score : 0;
+    if (finalScore > lowestRankingScore || rankings.length < 5) {
       setGameState('nameInput');
     } else {
       setGameState('gameOver');
@@ -388,7 +388,7 @@ const ArrowDodgeGame = () => {
     
     const newRankings = [...rankings, newEntry]
       .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
+      .slice(0, 5);
     
     setRankings(newRankings);
     setPlayerName('');
@@ -553,10 +553,58 @@ const ArrowDodgeGame = () => {
           padding: '24px',
           borderRadius: '8px',
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center'
+          textAlign: 'center',
+          maxWidth: '400px',
+          width: '100%'
         }}>
           <p style={{ fontSize: '1.25rem', marginBottom: '8px' }}>점수: {finalScore}</p>
           <p style={{ fontSize: '1.125rem', marginBottom: '16px' }}>레벨: {level}</p>
+          
+          {/* 랭킹 표시 */}
+          <div style={{ marginBottom: '24px' }}>
+            <h3 style={{ 
+              fontSize: '1.125rem', 
+              fontWeight: '600', 
+              marginBottom: '12px',
+              color: '#6b21a8' 
+            }}>🏆 TOP 5 랭킹</h3>
+            <div style={{ 
+              textAlign: 'left', 
+              fontSize: '0.875rem'
+            }}>
+              {rankings.slice(0, 5).map((entry, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '6px 8px',
+                  borderRadius: '4px',
+                  marginBottom: '4px',
+                  backgroundColor: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
+                    ? '#fef3c7' : '#f9fafb',
+                  border: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
+                    ? '2px solid #fbbf24' : '1px solid #e5e7eb'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{
+                      fontWeight: 'bold',
+                      marginRight: '8px',
+                      minWidth: '20px',
+                      color: index < 3 ? '#dc2626' : '#6b7280'
+                    }}>
+                      {index + 1}.
+                    </span>
+                    <span style={{ fontWeight: '500' }}>{entry.name}</span>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontWeight: 'bold', color: '#dc2626', fontSize: '0.8rem' }}>{entry.score}점</div>
+                    <div style={{ fontSize: '0.7rem', color: '#6b7280' }}>Lv.{entry.level}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
           <div>
             <button 
               onClick={startGame}
@@ -640,7 +688,7 @@ const ArrowDodgeGame = () => {
           <p style={{ fontSize: '1.5rem', marginBottom: '8px' }}>축하합니다!</p>
           <p style={{ fontSize: '1.25rem', marginBottom: '8px' }}>점수: {finalScore}</p>
           <p style={{ fontSize: '1.125rem', marginBottom: '16px' }}>레벨: {level}</p>
-          <p style={{ fontSize: '1.125rem', marginBottom: '16px' }}>TOP 10에 진입했습니다!</p>
+          <p style={{ fontSize: '1.125rem', marginBottom: '16px' }}>TOP 5에 진입했습니다!</p>
           
           <div style={{ marginBottom: '16px' }}>
             <label style={{
