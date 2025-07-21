@@ -511,6 +511,21 @@ const ArrowDodgeGame = () => {
           >
             게임 시작
           </button>
+          <button 
+            onClick={() => setGameState('gameOver')}
+            style={{
+              marginTop: '24px',
+              backgroundColor: '#7c3aed',
+              color: 'white',
+              fontWeight: 'bold',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            랭킹 보기
+          </button>
         </div>
       </div>
     );
