@@ -979,24 +979,6 @@ const ArrowDodgeGame = () => {
                 }}
               ></div>
               
-              {/* Debug touch status */}
-              <div style={{
-                position: 'absolute',
-                top: '48px',
-                left: '8px',
-                color: 'white',
-                fontSize: '0.75rem',
-                zIndex: 50,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                padding: '4px',
-                borderRadius: '4px',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                pointerEvents: 'none'
-              }}>
-                터치: {touchControls.left ? '←' : touchControls.right ? '→' : '없음'}<br/>
-                플레이어: {Math.round(player.x)}
-              </div>
             </>
           )}
 
