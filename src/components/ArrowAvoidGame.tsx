@@ -50,7 +50,7 @@ const ArrowDodgeGame = () => {
     speed: { count: 1, active: false, time: 0 }
   });
 
-  const gameLoopRef = useRef<number | null>(null);
+  const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const keysRef = useRef<{[key: string]: boolean}>({});
 
   useEffect(() => {
