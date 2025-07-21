@@ -369,8 +369,8 @@ const ArrowDodgeGame = () => {
   }, [gameLoop, gameState]);
 
   const checkRanking = (finalScore: number) => {
-    const lowestRankingScore = rankings.length >= 5 ? rankings[4].score : 0;
-    if (finalScore > lowestRankingScore || rankings.length < 5) {
+    const lowestRankingScore = rankings.length >= 10 ? rankings[9].score : 0;
+    if (finalScore > lowestRankingScore || rankings.length < 10) {
       setGameState('nameInput');
     } else {
       setGameState('gameOver');
@@ -388,7 +388,7 @@ const ArrowDodgeGame = () => {
     
     const newRankings = [...rankings, newEntry]
       .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
+      .slice(0, 10);
     
     setRankings(newRankings);
     setPlayerName('');
@@ -567,19 +567,21 @@ const ArrowDodgeGame = () => {
               fontWeight: '600', 
               marginBottom: '12px',
               color: '#6b21a8' 
-            }}>🏆 TOP 5 랭킹</h3>
+            }}>🏆 TOP 10 랭킹</h3>
             <div style={{ 
               textAlign: 'left', 
-              fontSize: '0.875rem'
+              fontSize: '0.75rem',
+              maxHeight: '200px',
+              overflowY: 'auto'
             }}>
-              {rankings.slice(0, 5).map((entry, index) => (
+              {rankings.slice(0, 10).map((entry, index) => (
                 <div key={index} style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '6px 8px',
-                  borderRadius: '4px',
-                  marginBottom: '4px',
+                  padding: '4px 6px',
+                  borderRadius: '3px',
+                  marginBottom: '2px',
                   backgroundColor: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
                     ? '#fef3c7' : 'white',
                   border: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
@@ -590,17 +592,18 @@ const ArrowDodgeGame = () => {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{
                       fontWeight: 'bold',
-                      marginRight: '8px',
-                      minWidth: '20px',
-                      color: index < 3 ? '#dc2626' : '#6b7280'
+                      marginRight: '6px',
+                      minWidth: '18px',
+                      color: index < 3 ? '#dc2626' : '#6b7280',
+                      fontSize: '0.7rem'
                     }}>
                       {index + 1}.
                     </span>
-                    <span style={{ fontWeight: '500' }}>{entry.name}</span>
+                    <span style={{ fontWeight: '500', color: '#374151' }}>{entry.name}</span>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontWeight: 'bold', color: '#dc2626', fontSize: '0.8rem' }}>{entry.score}점</div>
-                    <div style={{ fontSize: '0.7rem', color: '#6b7280' }}>Lv.{entry.level}</div>
+                    <div style={{ fontWeight: 'bold', color: '#dc2626', fontSize: '0.7rem' }}>{entry.score}점</div>
+                    <div style={{ fontSize: '0.6rem', color: '#6b7280' }}>Lv.{entry.level}</div>
                   </div>
                 </div>
               ))}
@@ -692,7 +695,7 @@ const ArrowDodgeGame = () => {
             fontSize: '1.2rem',
             color: 'white',
             textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
-          }}>TOP 5에 진입했습니다! ⭐</p>
+          }}>TOP 10에 진입했습니다! ⭐</p>
         </div>
         
         <div style={{
