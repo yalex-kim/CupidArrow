@@ -511,21 +511,6 @@ const ArrowDodgeGame = () => {
           >
             게임 시작
           </button>
-          <button 
-            onClick={() => setGameState('rankings')}
-            style={{
-              marginTop: '24px',
-              backgroundColor: '#7c3aed',
-              color: 'white',
-              fontWeight: 'bold',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            랭킹 보기
-          </button>
         </div>
       </div>
     );
@@ -547,7 +532,7 @@ const ArrowDodgeGame = () => {
           fontWeight: 'bold',
           color: '#f87171',
           marginBottom: '16px'
-        }}>💔 게임 오버 💔</h1>
+        }}>🏆 랭킹 🏆</h1>
         <div style={{
           backgroundColor: 'white',
           padding: '16px 24px 24px 24px',
@@ -662,23 +647,6 @@ const ArrowDodgeGame = () => {
               }}
             >
               메인 메뉴
-            </button>
-            <button 
-              onClick={() => setGameState('rankings')}
-              style={{
-                backgroundColor: '#7c3aed',
-                color: 'white',
-                fontWeight: 'bold',
-                padding: '20px 32px',
-                borderRadius: '6px',
-                border: 'none',
-                cursor: 'pointer',
-                flex: '1',
-                minWidth: '110px',
-                fontSize: '1rem'
-              }}
-            >
-              랭킹 보기
             </button>
           </div>
         </div>
@@ -815,101 +783,6 @@ const ArrowDodgeGame = () => {
     );
   }
 
-  if (gameState === 'rankings') {
-    return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        background: 'linear-gradient(to bottom, #c084fc, #60a5fa)',
-        padding: '16px'
-      }}>
-        <h1 style={{
-          fontSize: '2.5rem',
-          fontWeight: 'bold',
-          color: '#6b21a8',
-          marginBottom: '16px'
-        }}>🏆 랭킹 🏆</h1>
-        <div style={{
-          backgroundColor: 'white',
-          padding: '24px',
-          borderRadius: '8px',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-          maxWidth: '400px',
-          width: '100%'
-        }}>
-          <div style={{ marginBottom: '24px' }}>
-            {rankings.map((entry, index) => (
-              <div key={index} style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '8px',
-                borderRadius: '4px',
-                marginBottom: '8px',
-                backgroundColor: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
-                  ? '#fef3c7' : '#f3f4f6',
-                border: entry.score === finalScore && entry.name === rankings.find(r => r.score === finalScore)?.name 
-                  ? '2px solid #fbbf24' : 'none'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{
-                    fontWeight: 'bold',
-                    fontSize: '1.125rem',
-                    marginRight: '8px',
-                    width: '32px'
-                  }}>
-                    {index + 1}.
-                  </span>
-                  <span style={{ fontWeight: '500' }}>{entry.name}</span>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontWeight: 'bold', color: '#dc2626' }}>{entry.score}점</div>
-                  <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>Lv.{entry.level}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div>
-            <button 
-              onClick={startGame}
-              style={{
-                backgroundColor: '#dc2626',
-                color: 'white',
-                fontWeight: 'bold',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                width: '100%',
-                marginBottom: '8px'
-              }}
-            >
-              다시 도전하기
-            </button>
-            <button 
-              onClick={() => setGameState('start')}
-              style={{
-                backgroundColor: '#6b7280',
-                color: 'white',
-                fontWeight: 'bold',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                width: '100%'
-              }}
-            >
-              메인 메뉴
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div style={{
