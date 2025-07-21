@@ -868,12 +868,24 @@ const ArrowDodgeGame = () => {
             width: '100%',
             height: '100%',
             background: 'linear-gradient(to bottom, #86efac, #16a34a)',
-            touchAction: 'none'
+            touchAction: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            WebkitTouchCallout: 'none',
+            WebkitUserDrag: 'none',
+            KhtmlUserDrag: 'none',
+            MozUserDrag: 'none',
+            OUserDrag: 'none',
+            userDrag: 'none'
           }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
           onTouchMove={(e: React.TouchEvent) => e.preventDefault()}
+          onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
+          onSelectStart={(e: React.SyntheticEvent) => e.preventDefault()}
         >
           {/* UI */}
           <div style={{
