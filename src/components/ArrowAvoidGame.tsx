@@ -640,11 +640,11 @@ const ArrowDodgeGame = () => {
                 border: 'none',
                 cursor: 'pointer',
                 flex: '1',
-                minWidth: '90px',
-                fontSize: '0.875rem'
+                minWidth: '110px',
+                fontSize: '1rem'
               }}
             >
-              다시 도전
+              다시 도전하기
             </button>
             <button 
               onClick={() => setGameState('start')}
@@ -657,8 +657,8 @@ const ArrowDodgeGame = () => {
                 border: 'none',
                 cursor: 'pointer',
                 flex: '1',
-                minWidth: '90px',
-                fontSize: '0.875rem'
+                minWidth: '110px',
+                fontSize: '1rem'
               }}
             >
               메인 메뉴
@@ -674,8 +674,8 @@ const ArrowDodgeGame = () => {
                 border: 'none',
                 cursor: 'pointer',
                 flex: '1',
-                minWidth: '90px',
-                fontSize: '0.875rem'
+                minWidth: '110px',
+                fontSize: '1rem'
               }}
             >
               랭킹 보기
