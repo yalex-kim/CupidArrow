@@ -550,29 +550,24 @@ const ArrowDodgeGame = () => {
         }}>💔 게임 오버 💔</h1>
         <div style={{
           backgroundColor: 'white',
-          padding: '24px',
+          padding: '16px 24px 24px 24px',
           borderRadius: '8px',
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
           textAlign: 'center',
           maxWidth: '400px',
           width: '100%'
         }}>
-          <p style={{ fontSize: '1.25rem', marginBottom: '8px' }}>점수: {finalScore}</p>
-          <p style={{ fontSize: '1.125rem', marginBottom: '16px' }}>레벨: {level}</p>
-          
           {/* 랭킹 표시 */}
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <h3 style={{ 
               fontSize: '1.125rem', 
               fontWeight: '600', 
-              marginBottom: '12px',
+              marginBottom: '8px',
               color: '#6b21a8' 
             }}>🏆 TOP 10 랭킹</h3>
             <div style={{ 
               textAlign: 'left', 
-              fontSize: '0.75rem',
-              maxHeight: '200px',
-              overflowY: 'auto'
+              fontSize: '0.75rem'
             }}>
               {rankings.slice(0, 10).map((entry, index) => (
                 <div key={index} style={{
@@ -608,6 +603,15 @@ const ArrowDodgeGame = () => {
                 </div>
               ))}
             </div>
+          </div>
+          
+          <div style={{ 
+            borderTop: '1px solid #e5e7eb', 
+            paddingTop: '16px', 
+            marginTop: '16px' 
+          }}>
+            <p style={{ fontSize: '1.125rem', marginBottom: '4px', fontWeight: '600' }}>점수: {finalScore}</p>
+            <p style={{ fontSize: '1rem', marginBottom: '16px', color: '#6b7280' }}>레벨: {level}</p>
           </div>
           
           <div>
