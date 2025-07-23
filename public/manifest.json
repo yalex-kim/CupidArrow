@@ -81,7 +81,15 @@
   ],
   "categories": ["games", "entertainment"],
   "lang": "en",
+  "dir": "ltr",
+  "iarc_rating_id": "e84b072d-71de-4b9b-a70e-e201c6b4c6a7",
   "prefer_related_applications": false,
+  "related_applications": [],
+  "scope_extensions": [
+    {
+      "origin": "https://cupid-arrow.vercel.app"
+    }
+  ],
   "edge_side_panel": {
     "preferred_width": 400
   }
