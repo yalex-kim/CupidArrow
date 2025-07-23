@@ -1,8 +1,11 @@
-const CACHE_NAME = 'cupid-arrow-v1';
+const CACHE_NAME = 'cupid-arrow-v2';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  // Static assets will be cached automatically by the browser
+  '/icon-512.png',
+  '/src/main.tsx',
+  '/src/index.css',
+  '/src/components/ArrowAvoidGame.tsx'
 ];
 
 self.addEventListener('install', event => {
