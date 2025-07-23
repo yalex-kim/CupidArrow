@@ -35,6 +35,16 @@ body {
   }
 }
 
+/* Add blink animation for invincibility effect */
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
 a {
   font-weight: 500;
   color: #646cff;

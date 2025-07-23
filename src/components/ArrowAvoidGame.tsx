@@ -29,6 +29,7 @@ const ArrowDodgeGame = () => {
   const [isLoadingRankings, setIsLoadingRankings] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
   const rankingRef = useRef<HTMLDivElement>(null);
+  const collisionProcessing = useRef(false);
   const [player, setPlayer] = useState({ x: GAME_WIDTH / 2, y: GAME_HEIGHT - 60 });
   const [arrows, setArrows] = useState<Array<{x: number, y: number, id: number}>>([]);
   const [confusionItems, setConfusionItems] = useState<Array<{x: number, y: number, id: number}>>([]);
@@ -37,6 +38,8 @@ const ArrowDodgeGame = () => {
   const [confusionTime, setConfusionTime] = useState(0);
   const [isSlowed, setIsSlowed] = useState(false);
   const [slowTime, setSlowTime] = useState(0);
+  const [isInvincible, setIsInvincible] = useState(false);
+  const [invincibilityTime, setInvincibilityTime] = useState(0);
   const [touchControls, setTouchControls] = useState({
     left: false,
     right: false
@@ -121,11 +124,14 @@ const ArrowDodgeGame = () => {
     setConfusionTime(0);
     setIsSlowed(false);
     setSlowTime(0);
+    setIsInvincible(false);
+    setInvincibilityTime(0);
     setSpeedTrails([]);
     setItems({
       shield: { count: 1, active: false, time: 0 },
       speed: { count: 1, active: false, time: 0 }
     });
+    collisionProcessing.current = false;
   };
 
   const gameLoop = useCallback(() => {
@@ -211,50 +217,6 @@ const ArrowDodgeGame = () => {
       y: item.y + 4
     })).filter(item => item.y < GAME_HEIGHT + 20));
 
-    // Check collisions with arrows
-    setPlayer(prevPlayer => {
-      let hit = false;
-      const currentArrows = arrows;
-      
-      currentArrows.forEach(arrow => {
-        const distance = Math.sqrt(
-          Math.pow(arrow.x - prevPlayer.x, 2) + 
-          Math.pow(arrow.y - prevPlayer.y, 2)
-        );
-
-        if (distance < 35) {
-          if (items.shield.active) {
-            hit = false;
-          } else {
-            hit = true;
-          }
-        }
-      });
-
-      if (hit) {
-        const damage = isConfused ? 2 : 1;
-        setLives(prevLives => {
-          const newLives = prevLives - damage;
-          if (newLives <= 0) {
-            setFinalScore(score);
-            checkRanking(score);
-          }
-          return Math.max(0, newLives);
-        });
-        
-        setArrows(prevArrows => 
-          prevArrows.filter(arrow => {
-            const distance = Math.sqrt(
-              Math.pow(arrow.x - prevPlayer.x, 2) + 
-              Math.pow(arrow.y - prevPlayer.y, 2)
-            );
-            return distance >= 35;
-          })
-        );
-      }
-
-      return prevPlayer;
-    });
 
     // Update item timers
     setItems(prev => {
@@ -289,6 +251,18 @@ const ArrowDodgeGame = () => {
         const newTime = prev - 16;
         if (newTime <= 0) {
           setIsSlowed(false);
+          return 0;
+        }
+        return newTime;
+      });
+    }
+
+    // Update invincibility
+    if (invincibilityTime > 0) {
+      setInvincibilityTime(prev => {
+        const newTime = prev - 16;
+        if (newTime <= 0) {
+          setIsInvincible(false);
           return 0;
         }
         return newTime;
@@ -332,8 +306,13 @@ const ArrowDodgeGame = () => {
         });
 
         if (confused) {
-          setIsConfused(true);
-          setConfusionTime(3000);
+          if (items.shield.active) {
+            // 쉴드가 활성화되어 있으면 아이템만 제거하고 효과 무시
+          } else {
+            // 쉴드가 없으면 혼란 효과 적용
+            setIsConfused(true);
+            setConfusionTime(3000);
+          }
         }
 
         return remainingItems;
@@ -360,17 +339,71 @@ const ArrowDodgeGame = () => {
         });
 
         if (slowed) {
-          setIsSlowed(true);
-          setSlowTime(4000);
+          if (items.shield.active) {
+            // 쉴드가 활성화되어 있으면 아이템만 제거하고 효과 무시
+          } else {
+            // 쉴드가 없으면 슬로우 효과 적용
+            setIsSlowed(true);
+            setSlowTime(4000);
+          }
         }
 
         return remainingItems;
       });
     };
 
+    // Check arrow collisions
+    const checkArrowCollision = () => {
+      if (isInvincible || collisionProcessing.current) return;
+      
+      for (const arrow of arrows) {
+        const distance = Math.sqrt(
+          Math.pow(arrow.x - player.x, 2) + 
+          Math.pow(arrow.y - player.y, 2)
+        );
+
+        if (distance < 35) {
+          collisionProcessing.current = true;
+          
+          if (items.shield.active) {
+            // 쉴드가 활성화되어 있으면 화살만 제거하고 데미지 없음
+          } else {
+            // 쉴드가 없으면 데미지
+            const damage = isConfused ? 2 : 1;
+            
+            setLives(prevLives => {
+              const newLives = prevLives - damage;
+              if (newLives <= 0) {
+                setFinalScore(score);
+                checkRanking(score);
+              }
+              return Math.max(0, newLives);
+            });
+            
+            // 화살에 맞으면 1.5초간 무적
+            setIsInvincible(true);
+            setInvincibilityTime(1500);
+          }
+          
+          // 충돌한 화살 제거
+          setArrows(prevArrows => 
+            prevArrows.filter(arr => arr.id !== arrow.id)
+          );
+          
+          // 500ms 후 충돌 처리 플래그 리셋
+          setTimeout(() => {
+            collisionProcessing.current = false;
+          }, 500);
+          
+          break; // 첫 번째 충돌에서 멈춤
+        }
+      }
+    };
+
     checkConfusionCollision();
     checkSlowCollision();
-  }, [player, gameState]);
+    checkArrowCollision();
+  }, [player, gameState, arrows, items.shield.active, isInvincible, isConfused, score]);
 
   useEffect(() => {
     if (gameState === 'playing') {
@@ -1065,23 +1098,43 @@ const ArrowDodgeGame = () => {
               position: 'absolute',
               fontSize: '50px',
               zIndex: 20,
-              color: items.shield.active ? '#facc15' : 
-                     items.speed.active ? '#60a5fa' : 
-                     '#2563eb',
+              color: items.speed.active ? '#60a5fa' : '#2563eb',
               left: player.x - PLAYER_SIZE/2, 
               top: player.y - PLAYER_SIZE/2,
               textShadow: items.speed.active ? 
                 '0 0 10px #60a5fa, 2px 2px 4px rgba(0,0,0,0.8)' : 
                 '2px 2px 4px rgba(0,0,0,0.8)',
               filter: items.speed.active ? 'drop-shadow(0 0 8px #60a5fa)' : 'none',
-              animation: items.speed.active ? 'pulse 1s infinite' : 'none',
+              animation: items.speed.active ? 'pulse 1s infinite' : 
+                        isInvincible ? 'blink 0.3s infinite' : 'none',
+              opacity: isInvincible && Math.floor(Date.now() / 150) % 2 ? 0.3 : 1,
               userSelect: 'none',
               WebkitUserSelect: 'none',
               pointerEvents: 'none'
             }}
           >
-            {items.shield.active ? '🛡️' : items.speed.active ? '🚀' : '🏃'}
+            🏃
           </div>
+
+          {/* Shield Effect */}
+          {items.shield.active && (
+            <div 
+              style={{
+                position: 'absolute',
+                left: player.x - 35,
+                top: player.y - 35,
+                width: '70px',
+                height: '70px',
+                border: '3px solid rgba(250, 204, 21, 0.8)',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(250, 204, 21, 0.1) 0%, rgba(250, 204, 21, 0.3) 100%)',
+                boxShadow: '0 0 20px rgba(250, 204, 21, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.3)',
+                zIndex: 19,
+                animation: 'pulse 1.5s infinite',
+                pointerEvents: 'none'
+              }}
+            />
+          )}
         </div>
 
         {/* ALL ARROWS */}
