@@ -9,6 +9,9 @@
   "orientation": "portrait",
   "scope": "/",
   "id": "https://cupid-arrow.vercel.app/",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
   "icons": [
     {
       "src": "/icon-512.png",
