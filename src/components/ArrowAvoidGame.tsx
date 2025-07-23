@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { saveRankingToNotion, getRankingsFromNotion, type RankingEntry } from '../services/notionService';
+import html2canvas from 'html2canvas';
 
 const GAME_WIDTH = 320;
 const GAME_HEIGHT = 480;
@@ -26,6 +27,8 @@ const ArrowDodgeGame = () => {
     { name: "러브", score: 200, level: 1 }
   ]);
   const [isLoadingRankings, setIsLoadingRankings] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const rankingRef = useRef<HTMLDivElement>(null);
   const [player, setPlayer] = useState({ x: GAME_WIDTH / 2, y: GAME_HEIGHT - 60 });
   const [arrows, setArrows] = useState<Array<{x: number, y: number, id: number}>>([]);
   const [confusionItems, setConfusionItems] = useState<Array<{x: number, y: number, id: number}>>([]);
@@ -431,6 +434,49 @@ const ArrowDodgeGame = () => {
     }
   };
 
+  const captureAndShareRanking = async () => {
+    if (!rankingRef.current) return;
+    
+    setIsCapturing(true);
+    try {
+      const canvas = await html2canvas(rankingRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        logging: false,
+        useCORS: true
+      });
+      
+      canvas.toBlob((blob) => {
+        if (blob) {
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'cupid-arrow-ranking.png', { type: 'image/png' })] })) {
+            // Native sharing (mobile)
+            const file = new File([blob], 'cupid-arrow-ranking.png', { type: 'image/png' });
+            navigator.share({
+              title: 'Cupid Arrow 게임 랭킹',
+              text: `Cupid Arrow 게임에서 ${score}점을 기록했어요! 🏆`,
+              files: [file]
+            });
+          } else {
+            // Fallback: download image
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cupid-arrow-ranking.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        }
+      }, 'image/png');
+    } catch (error) {
+      console.error('캡처 실패:', error);
+      alert('캡처에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsCapturing(false);
+    }
+  };
+
   // Touch control handlers for screen touch
   const handleTouchStart = (e: React.TouchEvent) => {
     if (gameState !== 'playing') return;
@@ -587,15 +633,18 @@ const ArrowDodgeGame = () => {
           color: '#f87171',
           marginBottom: '16px'
         }}>🏆 랭킹 🏆</h1>
-        <div style={{
-          backgroundColor: 'white',
-          padding: '16px 24px 24px 24px',
-          borderRadius: '8px',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center',
-          maxWidth: '400px',
-          width: '100%'
-        }}>
+        <div 
+          ref={rankingRef}
+          style={{
+            backgroundColor: 'white',
+            padding: '16px 24px 24px 24px',
+            borderRadius: '8px',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+            textAlign: 'center',
+            maxWidth: '400px',
+            width: '100%'
+          }}
+        >
           {/* 랭킹 표시 */}
           <div style={{ marginBottom: '16px' }}>
             <h3 style={{ 
@@ -663,6 +712,34 @@ const ArrowDodgeGame = () => {
             <p style={{ fontSize: '1.25rem', fontWeight: '600', margin: 0, color: '#dc2626' }}>최종 점수: {finalScore}점</p>
           </div>
           
+          {/* 캡처 버튼 */}
+          <button 
+            onClick={captureAndShareRanking}
+            disabled={isCapturing}
+            style={{
+              backgroundColor: isCapturing ? '#9ca3af' : '#8b5cf6',
+              color: 'white',
+              fontWeight: 'bold',
+              padding: '12px 24px',
+              borderRadius: '6px',
+              border: 'none',
+              cursor: isCapturing ? 'not-allowed' : 'pointer',
+              width: '100%',
+              fontSize: '0.9rem',
+              marginBottom: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+          >
+            {isCapturing ? (
+              <>⏳ 캡처 중...</>
+            ) : (
+              <>📸 랭킹 캡처 & 공유</>
+            )}
+          </button>
+
           <div style={{
             display: 'flex',
             gap: '8px',
