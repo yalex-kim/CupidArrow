@@ -22,7 +22,27 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(response => {
         // Return cached version or fetch from network
-        return response || fetch(event.request);
+        if (response) {
+          return response;
+        }
+        return fetch(event.request).then(
+          function(response) {
+            // Check if we received a valid response
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Clone the response
+            var responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
       }
     )
   );
