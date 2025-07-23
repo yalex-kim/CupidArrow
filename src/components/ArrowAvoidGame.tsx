@@ -76,7 +76,7 @@ const ArrowDodgeGame = () => {
       keysRef.current[e.key.toLowerCase()] = true;
       
       // Item usage
-      if (gameState === 'playing') {
+      if (gameState === 'playing' && !isInvincible) {
         if (e.key === '1' && items.shield.count > 0 && !items.shield.active) {
           useItem('shield');
         } else if (e.key === '2' && items.speed.count > 0 && !items.speed.active) {
@@ -467,6 +467,37 @@ const ArrowDodgeGame = () => {
     }
   };
 
+  const shareGameLink = () => {
+    const gameUrl = window.location.href;
+    const shareText = `Cupid Arrow 게임에서 ${finalScore}점을 기록했어요! 🏆 나도 도전해보세요!`;
+    
+    if (navigator.share) {
+      // Native sharing (mobile)
+      navigator.share({
+        title: 'Cupid Arrow 게임',
+        text: shareText,
+        url: gameUrl
+      }).catch((error) => {
+        console.log('공유 취소:', error);
+      });
+    } else {
+      // Fallback: copy to clipboard
+      const fullText = `${shareText}\n${gameUrl}`;
+      navigator.clipboard.writeText(fullText).then(() => {
+        alert('게임 링크가 클립보드에 복사되었습니다!');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = fullText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('게임 링크가 클립보드에 복사되었습니다!');
+      });
+    }
+  };
+
   const captureAndShareRanking = async () => {
     if (!rankingRef.current) return;
     
@@ -486,7 +517,7 @@ const ArrowDodgeGame = () => {
             const file = new File([blob], 'cupid-arrow-ranking.png', { type: 'image/png' });
             navigator.share({
               title: 'Cupid Arrow 게임 랭킹',
-              text: `Cupid Arrow 게임에서 ${score}점을 기록했어요! 🏆`,
+              text: `Cupid Arrow 게임에서 ${finalScore}점을 기록했어요! 🏆`,
               files: [file]
             });
           } else {
@@ -533,6 +564,26 @@ const ArrowDodgeGame = () => {
     }
   };
 
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (gameState !== 'playing') return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const touch = e.touches[0];
+    const rect = e.currentTarget.getBoundingClientRect();
+    const touchX = touch.clientX - rect.left;
+    
+    // Update movement direction based on current touch position
+    if (touchX < player.x) {
+      setTouchControls({ left: true, right: false });
+    } else if (touchX > player.x) {
+      setTouchControls({ left: false, right: true });
+    } else {
+      setTouchControls({ left: false, right: false });
+    }
+  };
+
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (gameState !== 'playing') return;
     
@@ -545,6 +596,7 @@ const ArrowDodgeGame = () => {
 
   const handleItemUse = (itemType: ItemType) => {
     if (gameState !== 'playing') return;
+    if (isInvincible) return; // 무적상태일 때 아이템 사용 차단
     
     if (itemType === 'shield' && items.shield.count > 0 && !items.shield.active) {
       useItem('shield');
@@ -657,7 +709,7 @@ const ArrowDodgeGame = () => {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(to bottom, #4b5563, #1f2937)',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '16px'
       }}>
         <h1 style={{
@@ -739,39 +791,68 @@ const ArrowDodgeGame = () => {
             borderTop: '1px solid #e5e7eb', 
             paddingTop: '12px', 
             marginTop: '12px',
-            textAlign: 'center',
+            position: 'relative',
             marginBottom: '16px'
           }}>
-            <p style={{ fontSize: '1.25rem', fontWeight: '600', margin: 0, color: '#dc2626' }}>최종 점수: {finalScore}점</p>
+            <p style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '600', 
+              margin: 0, 
+              color: '#dc2626',
+              textAlign: 'center'
+            }}>최종 점수: {finalScore}점</p>
+            
+            <div style={{ 
+              position: 'absolute',
+              right: 0,
+              top: '12px',
+              display: 'flex', 
+              gap: '8px' 
+            }}>
+              {/* 캡처 버튼 */}
+              <button 
+                onClick={captureAndShareRanking}
+                disabled={isCapturing}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: isCapturing ? 'not-allowed' : 'pointer',
+                  fontSize: '2rem',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px'
+                }}
+              >
+                {isCapturing ? (
+                  <span style={{ color: '#9ca3af' }}>⏳</span>
+                ) : (
+                  <span style={{ color: '#667eea' }}>📸</span>
+                )}
+              </button>
+
+              {/* Share 버튼 */}
+              <button 
+                onClick={shareGameLink}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '2rem',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px'
+                }}
+              >
+                <span style={{ color: '#667eea' }}>⤴️</span>
+              </button>
+            </div>
           </div>
-          
-          {/* 캡처 버튼 */}
-          <button 
-            onClick={captureAndShareRanking}
-            disabled={isCapturing}
-            style={{
-              backgroundColor: isCapturing ? '#9ca3af' : '#8b5cf6',
-              color: 'white',
-              fontWeight: 'bold',
-              padding: '12px 24px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: isCapturing ? 'not-allowed' : 'pointer',
-              width: '100%',
-              fontSize: '0.9rem',
-              marginBottom: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-          >
-            {isCapturing ? (
-              <>⏳ 캡처 중...</>
-            ) : (
-              <>📸 랭킹 캡처 & 공유</>
-            )}
-          </button>
 
           <div style={{
             display: 'flex',
@@ -988,7 +1069,7 @@ const ArrowDodgeGame = () => {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
-          onTouchMove={(e: React.TouchEvent) => e.preventDefault()}
+          onTouchMove={handleTouchMove}
           onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
         >
           {/* UI */}
@@ -1200,17 +1281,17 @@ const ArrowDodgeGame = () => {
           </div>
         ))}
 
-        {/* Speed trails */}
+        {/* Speed trails - player afterimages */}
         {speedTrails.map(trail => (
           <div
             key={trail.id}
             style={{
               position: 'absolute',
               zIndex: 10,
-              left: trail.x - 15,
-              top: trail.y - 15,
-              fontSize: '30px',
-              opacity: trail.opacity,
+              left: trail.x - PLAYER_SIZE / 2,
+              top: trail.y - PLAYER_SIZE / 2,
+              fontSize: '50px',
+              opacity: trail.opacity * 0.5,
               color: '#60a5fa',
               textShadow: '0 0 5px #60a5fa',
               userSelect: 'none',
@@ -1218,7 +1299,7 @@ const ArrowDodgeGame = () => {
               pointerEvents: 'none'
             }}
           >
-            ⭐
+            🏃
           </div>
         ))}
 
