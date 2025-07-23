@@ -521,15 +521,38 @@ const ArrowDodgeGame = () => {
               files: [file]
             });
           } else {
-            // Fallback: download image
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'cupid-arrow-ranking.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            // Fallback: copy to clipboard
+            if (navigator.clipboard && navigator.clipboard.write) {
+              navigator.clipboard.write([
+                new ClipboardItem({
+                  'image/png': blob
+                })
+              ]).then(() => {
+                alert('랭킹 이미지가 클립보드에 복사되었습니다!');
+              }).catch(() => {
+                // If clipboard fails, fall back to download
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cupid-arrow-ranking.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert('이미지가 다운로드되었습니다!');
+              });
+            } else {
+              // If no clipboard support, download
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'cupid-arrow-ranking.png';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+              alert('이미지가 다운로드되었습니다!');
+            }
           }
         }
       }, 'image/png');
@@ -564,25 +587,6 @@ const ArrowDodgeGame = () => {
     }
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (gameState !== 'playing') return;
-    
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const touch = e.touches[0];
-    const rect = e.currentTarget.getBoundingClientRect();
-    const touchX = touch.clientX - rect.left;
-    
-    // Update movement direction based on current touch position
-    if (touchX < player.x) {
-      setTouchControls({ left: true, right: false });
-    } else if (touchX > player.x) {
-      setTouchControls({ left: false, right: true });
-    } else {
-      setTouchControls({ left: false, right: false });
-    }
-  };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (gameState !== 'playing') return;
@@ -1069,7 +1073,7 @@ const ArrowDodgeGame = () => {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
-          onTouchMove={handleTouchMove}
+          onTouchMove={(e: React.TouchEvent) => e.preventDefault()}
           onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
         >
           {/* UI */}
