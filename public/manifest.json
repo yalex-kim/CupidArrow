@@ -8,7 +8,7 @@
   "theme_color": "#dc2626",
   "orientation": "portrait",
   "scope": "/",
-  "id": "cupid-arrow-game",
+  "id": "https://cupid-arrow.vercel.app/",
   "icons": [
     {
       "src": "/icon-512.png",
