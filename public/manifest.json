@@ -14,16 +14,25 @@
   },
   "screenshots": [
     {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "narrow"
+      "src": "/screenshot_1.jpg",
+      "sizes": "390x844",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Game Start Screen"
     },
     {
-      "src": "/icon-512.png", 
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "wide"
+      "src": "/screenshot_2.jpg",
+      "sizes": "390x844",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Gameplay Screen"
+    },
+    {
+      "src": "/screenshot_3.jpg",
+      "sizes": "390x844",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Ranking Screen"
     }
   ],
   "icons": [
