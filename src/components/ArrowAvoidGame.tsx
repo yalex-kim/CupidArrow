@@ -1135,6 +1135,74 @@ const ArrowDodgeGame = () => {
               ))}
             </div>
           </div>
+          
+          <div style={{ 
+            borderTop: '1px solid #e5e7eb', 
+            paddingTop: '12px', 
+            marginTop: '12px',
+            position: 'relative',
+            marginBottom: '16px'
+          }}>
+            <p style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '600', 
+              margin: 0, 
+              color: '#dc2626',
+              textAlign: 'left',
+              paddingLeft: '20px'
+            }}>전체 랭킹 보기</p>
+            
+            <div style={{ 
+              position: 'absolute',
+              right: 0,
+              top: '12px',
+              display: 'flex', 
+              gap: '8px' 
+            }}>
+              {/* 캡처 버튼 */}
+              <button 
+                onClick={captureAndShareRanking}
+                disabled={isCapturing}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: isCapturing ? 'not-allowed' : 'pointer',
+                  fontSize: '2rem',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px'
+                }}
+              >
+                {isCapturing ? (
+                  <span style={{ color: '#9ca3af' }}>⏳</span>
+                ) : (
+                  <span style={{ color: '#667eea' }}>📸</span>
+                )}
+              </button>
+
+              {/* Share 버튼 */}
+              <button 
+                onClick={shareGameLink}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '2rem',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px'
+                }}
+              >
+                <span style={{ color: '#667eea' }}>⤴️</span>
+              </button>
+            </div>
+          </div>
 
           <div style={{
             display: 'flex',
