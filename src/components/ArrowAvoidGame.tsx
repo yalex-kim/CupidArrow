@@ -810,61 +810,59 @@ const ArrowDodgeGame = () => {
               textAlign: 'left',
               paddingLeft: '20px'
             }}>
-              {showFinalScore ? `최종 점수: ${finalScore}점` : '전체 랭킹 보기'}
+              최종 점수: {finalScore}점
             </p>
             
-            {showFinalScore && (
-              <div style={{ 
-                position: 'absolute',
-                right: 0,
-                top: '12px',
-                display: 'flex', 
-                gap: '8px' 
-              }}>
-                {/* 캡처 버튼 */}
-                <button 
-                  onClick={captureAndShareRanking}
-                  disabled={isCapturing}
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: isCapturing ? 'not-allowed' : 'pointer',
-                    fontSize: '2rem',
-                    padding: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px',
-                    height: '40px'
-                  }}
-                >
-                  {isCapturing ? (
-                    <span style={{ color: '#9ca3af' }}>⏳</span>
-                  ) : (
-                    <span style={{ color: '#667eea' }}>📸</span>
-                  )}
-                </button>
+            <div style={{ 
+              position: 'absolute',
+              right: 0,
+              top: '12px',
+              display: 'flex', 
+              gap: '8px' 
+            }}>
+              {/* 캡처 버튼 */}
+              <button 
+                onClick={captureAndShareRanking}
+                disabled={isCapturing}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: isCapturing ? 'not-allowed' : 'pointer',
+                  fontSize: '2rem',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px'
+                }}
+              >
+                {isCapturing ? (
+                  <span style={{ color: '#9ca3af' }}>⏳</span>
+                ) : (
+                  <span style={{ color: '#667eea' }}>📸</span>
+                )}
+              </button>
 
-                {/* Share 버튼 */}
-                <button 
-                  onClick={shareGameLink}
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '2rem',
-                    padding: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px',
-                    height: '40px'
-                  }}
-                >
-                  <span style={{ color: '#667eea' }}>⤴️</span>
-                </button>
-              </div>
-            )}
+              {/* Share 버튼 */}
+              <button 
+                onClick={shareGameLink}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '2rem',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px'
+                }}
+              >
+                <span style={{ color: '#667eea' }}>⤴️</span>
+              </button>
+            </div>
           </div>
 
           <div style={{
