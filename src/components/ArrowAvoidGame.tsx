@@ -803,7 +803,8 @@ const ArrowDodgeGame = () => {
               fontWeight: '600', 
               margin: 0, 
               color: '#dc2626',
-              textAlign: 'center'
+              textAlign: 'left',
+              paddingLeft: '20px'
             }}>최종 점수: {finalScore}점</p>
             
             <div style={{ 
@@ -1023,10 +1024,30 @@ const ArrowDodgeGame = () => {
               fontSize: '1.1rem',
               boxShadow: !playerName.trim() || isLoadingRankings ? 'none' : '0 4px 12px rgba(220, 38, 38, 0.3)',
               transform: !playerName.trim() || isLoadingRankings ? 'none' : 'translateY(-1px)',
-              transition: 'all 0.2s'
+              transition: 'all 0.2s',
+              marginBottom: '12px'
             }}
           >
             {isLoadingRankings ? '⏳ 등록 중...' : '🏆 랭킹에 등록하기 🏆'}
+          </button>
+          
+          <button 
+            onClick={() => setGameState('rankings')}
+            style={{
+              backgroundColor: '#6b7280',
+              color: 'white',
+              fontWeight: 'bold',
+              padding: '12px 24px',
+              borderRadius: '12px',
+              border: 'none',
+              cursor: 'pointer',
+              width: '100%',
+              fontSize: '1rem',
+              boxShadow: '0 2px 8px rgba(107, 114, 128, 0.3)',
+              transition: 'all 0.2s'
+            }}
+          >
+            📊 랭킹 보기
           </button>
         </div>
       </div>
