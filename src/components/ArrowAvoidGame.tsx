@@ -28,7 +28,6 @@ const ArrowDodgeGame = () => {
   ]);
   const [isLoadingRankings, setIsLoadingRankings] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
-  const [showFinalScore, setShowFinalScore] = useState(false);
   const rankingRef = useRef<HTMLDivElement>(null);
   const collisionProcessing = useRef(false);
   const [player, setPlayer] = useState({ x: GAME_WIDTH / 2, y: GAME_HEIGHT - 60 });
@@ -423,7 +422,6 @@ const ArrowDodgeGame = () => {
     if (finalScore > lowestRankingScore || rankings.length < 10) {
       setGameState('nameInput');
     } else {
-      setShowFinalScore(true);
       setGameState('rankings');
     }
   };
@@ -460,7 +458,6 @@ const ArrowDodgeGame = () => {
     
     setIsLoadingRankings(false);
     setPlayerName('');
-    setShowFinalScore(true);
     setGameState('rankings');
   };
 
@@ -687,7 +684,6 @@ const ArrowDodgeGame = () => {
                 setRankings(notionRankings);
               }
               setIsLoadingRankings(false);
-              setShowFinalScore(false);
               setGameState('rankings');
             }}
             disabled={isLoadingRankings}
@@ -1038,10 +1034,7 @@ const ArrowDodgeGame = () => {
           </button>
           
           <button 
-            onClick={() => {
-              setShowFinalScore(false);
-              setGameState('rankings');
-            }}
+            onClick={() => setGameState('rankings')}
             style={{
               backgroundColor: '#6b7280',
               color: 'white',
