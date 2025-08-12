@@ -282,6 +282,21 @@ const ArrowDodgeGame = () => {
     }
   }, [gameState, level, items, isConfused, confusionTime, isSlowed, slowTime, score, arrows, touchControls]);
 
+  // 랭킹 화면이 보일 때마다 서버에서 최신 데이터 가져오기
+  useEffect(() => {
+    if (gameState === 'rankings') {
+      const refreshRankings = async () => {
+        setIsLoadingRankings(true);
+        const notionRankings = await getRankingsFromNotion();
+        if (notionRankings.length > 0) {
+          setRankings(notionRankings);
+        }
+        setIsLoadingRankings(false);
+      };
+      refreshRankings();
+    }
+  }, [gameState]);
+
   // Check collisions separately to avoid state dependency issues
   useEffect(() => {
     if (gameState !== 'playing') return;
@@ -677,28 +692,21 @@ const ArrowDodgeGame = () => {
             게임 시작
           </button>
           <button 
-            onClick={async () => {
-              setIsLoadingRankings(true);
-              const notionRankings = await getRankingsFromNotion();
-              if (notionRankings.length > 0) {
-                setRankings(notionRankings);
-              }
-              setIsLoadingRankings(false);
+            onClick={() => {
               setGameState('rankings');
             }}
-            disabled={isLoadingRankings}
             style={{
               marginTop: '24px',
-              backgroundColor: isLoadingRankings ? '#9ca3af' : '#7c3aed',
+              backgroundColor: '#7c3aed',
               color: 'white',
               fontWeight: 'bold',
               padding: '12px 24px',
               borderRadius: '8px',
               border: 'none',
-              cursor: isLoadingRankings ? 'not-allowed' : 'pointer'
+              cursor: 'pointer'
             }}
           >
-            {isLoadingRankings ? '⏳ 로딩 중...' : '랭킹 보기'}
+            랭킹 보기
           </button>
         </div>
       </div>
