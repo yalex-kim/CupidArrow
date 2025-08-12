@@ -1,8 +1,8 @@
-import ArrowAvoidGameRefactored from './components/ArrowAvoidGameRefactored'
+import ArrowAvoidGameSimple from './components/ArrowAvoidGameSimple'
 import './App.css'
 
 function App() {
-  return <ArrowAvoidGameRefactored />
+  return <ArrowAvoidGameSimple />
 }
 
 export default App
