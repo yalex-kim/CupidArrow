@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cupid-arrow-v3';
+const CACHE_NAME = 'cupid-arrow-v4';
 const urlsToCache = [
   '/',
   '/manifest.json',
