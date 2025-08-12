@@ -111,7 +111,7 @@ export class GameEngine {
     // This method can be called with movement data
   }
 
-  movePlayer(direction: 'left' | 'right', keys: { [key: string]: boolean }, touchControls: { left: boolean; right: boolean }): void {
+  movePlayer(_direction: 'left' | 'right', keys: { [key: string]: boolean }, touchControls: { left: boolean; right: boolean }): void {
     if (this.gameState.state !== 'playing') return;
 
     const baseSpeed = this.gameState.items.speed.active ? 3 : 2;

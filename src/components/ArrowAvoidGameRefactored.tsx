@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { GameEngine } from '../game/GameEngine';
 import { RankingManager } from '../services/RankingManager';
-import { RankingEntry } from '../services/notionService';
+import type { RankingEntry } from '../services/notionService';
 import { GameUI } from './GameUI';
 import { GameObjects } from './GameObjects';
 import { GameEffects } from './GameEffects';
@@ -12,12 +12,33 @@ const GAME_HEIGHT = 480;
 
 const ArrowAvoidGameRefactored = () => {
   // Game Engine and Managers
-  const gameEngineRef = useRef<GameEngine>();
-  const rankingManagerRef = useRef<RankingManager>();
+  const gameEngineRef = useRef<GameEngine | null>(null);
+  const rankingManagerRef = useRef<RankingManager | null>(null);
   const rankingRef = useRef<HTMLDivElement>(null);
 
   // Component State
-  const [gameState, setGameState] = useState(() => new GameEngine().getState());
+  const [gameState, setGameState] = useState<any>(() => ({
+    state: 'start',
+    level: 1,
+    lives: 3,
+    score: 0,
+    finalScore: 0,
+    player: { x: 160, y: 420, size: 50, id: 0 },
+    arrows: [],
+    confusionItems: [],
+    slowItems: [],
+    speedTrails: [],
+    isConfused: false,
+    confusionTime: 0,
+    isSlowed: false,
+    slowTime: 0,
+    isInvincible: false,
+    invincibilityTime: 0,
+    items: {
+      shield: { count: 1, active: false, time: 0 },
+      speed: { count: 1, active: false, time: 0 }
+    }
+  }));
   const [playerName, setPlayerName] = useState('');
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [isLoadingRankings, setIsLoadingRankings] = useState(false);
@@ -29,12 +50,15 @@ const ArrowAvoidGameRefactored = () => {
 
   // Refs
   const keysRef = useRef<{[key: string]: boolean}>({});
-  const gameUpdateIntervalRef = useRef<NodeJS.Timeout>();
+  const gameUpdateIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Initialize game engine and ranking manager
   useEffect(() => {
     gameEngineRef.current = new GameEngine();
     rankingManagerRef.current = new RankingManager();
+    
+    // Set initial game state
+    setGameState(gameEngineRef.current.getState());
     
     const initialRankings = rankingManagerRef.current.getRankings();
     setRankings(initialRankings);
@@ -57,7 +81,7 @@ const ArrowAvoidGameRefactored = () => {
         const finalScore = newState.score;
         gameEngineRef.current.setFinalScore(finalScore);
         
-        if (rankingManagerRef.current?.checkRankingEligibility(finalScore)) {
+        if (rankingManagerRef.current && rankingManagerRef.current.checkRankingEligibility(finalScore)) {
           gameEngineRef.current.setState('nameInput');
         } else {
           gameEngineRef.current.setState('rankings');
@@ -242,7 +266,7 @@ const ArrowAvoidGameRefactored = () => {
       
       canvas.toBlob((blob) => {
         if (blob) {
-          if (navigator.share && navigator.canShare) {
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'cupid-arrow-ranking.png', { type: 'image/png' })] })) {
             const file = new File([blob], 'cupid-arrow-ranking.png', { type: 'image/png' });
             navigator.share({
               title: 'Cupid Arrow 게임 랭킹',

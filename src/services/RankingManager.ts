@@ -1,4 +1,5 @@
-import { RankingEntry, getRankingsFromNotion, saveRankingToNotion } from './notionService';
+import type { RankingEntry } from './notionService';
+import { getRankingsFromNotion, saveRankingToNotion } from './notionService';
 
 export class RankingManager {
   private rankings: RankingEntry[] = [

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameState } from '../game/GameEngine';
+import type { GameState } from '../game/GameEngine';
 
 interface GameUIProps {
   gameState: GameState;
