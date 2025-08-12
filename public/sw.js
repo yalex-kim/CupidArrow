@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cupid-arrow-v2';
+const CACHE_NAME = 'cupid-arrow-v3';
 const urlsToCache = [
   '/',
   '/manifest.json',
@@ -42,7 +42,17 @@ self.addEventListener('fetch', event => {
 
             caches.open(CACHE_NAME)
               .then(function(cache) {
-                cache.put(event.request, responseToCache);
+                // Additional check before caching
+                if (event.request.url.startsWith('http')) {
+                  try {
+                    cache.put(event.request, responseToCache);
+                  } catch (error) {
+                    console.warn('Failed to cache request:', event.request.url, error);
+                  }
+                }
+              })
+              .catch(error => {
+                console.warn('Cache operation failed:', error);
               });
 
             return response;
