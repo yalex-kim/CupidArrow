@@ -38,7 +38,16 @@ export const saveRankingToNotion = async (entry: RankingEntry): Promise<boolean>
 export const getRankingsFromNotion = async (): Promise<RankingEntry[]> => {
   try {
     console.log('Fetching from API:', API_BASE_URL);
-    const response = await fetch(`${API_BASE_URL}/rankings`);
+    // 캐시 방지를 위한 타임스탬프 추가
+    const timestamp = new Date().getTime();
+    const response = await fetch(`${API_BASE_URL}/rankings?t=${timestamp}`, {
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
 
     if (!response.ok) {
       const error = await response.text();
